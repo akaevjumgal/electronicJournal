@@ -13,6 +13,7 @@ input, a{
 #authForm{
     padding: 0 30px;
 }
+
 .card{
     margin: 13% auto;
     max-width: 400px;
@@ -36,4 +37,30 @@ input, a{
 }
 #password{
     position: relative;
+}
+.brand-logo i{
+    margin: 0 20px;
+}
+nav .brand-logo i.material-icons{
+    font-size: 30px;
+}
+.nav-extended{
+    z-index: 99999999;
+}
+.side-nav{
+    top: auto;
+}
+#authUser{
+    margin: 0 10px;
+    line-height: 62px;
+
+}
+#group_filter label .input-sm{
+    width: auto;
+}
+#inGroup{
+    padding: 0 30px;
+}
+#content{
+    width: 75%;
 }
