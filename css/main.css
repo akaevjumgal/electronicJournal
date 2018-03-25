@@ -13,7 +13,20 @@ input, a{
 #authForm{
     padding: 0 30px;
 }
-
+#authForm span{
+    color: #ff1000;
+    font-family: 'Roboto', sans-serif;
+}
+#reg_form{
+    padding: 0 10px;
+}
+#reg_form #showPassword{
+    right: 10px;
+}
+#reg_form span{
+    color: #ff1000;
+    font-family: 'Roboto', sans-serif;
+}
 .card{
     margin: 13% auto;
     max-width: 400px;
@@ -21,12 +34,19 @@ input, a{
     height: 100%;
     overflow: hidden;
 }
+.reg{
+    margin: 3% auto;
+    max-width: 500px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
 #showPassword{
     position: absolute;
     right: 0;
     top: 0;
     line-height: 60px;
-
 }
 #showPassword i{
     color: #bdbdbd;
@@ -35,6 +55,7 @@ input, a{
     color: #000;
     transition: 0.8s;
 }
+
 #password{
     position: relative;
 }
@@ -53,8 +74,8 @@ nav .brand-logo i.material-icons{
 #authUser{
     margin: 0 10px;
     line-height: 62px;
-
 }
+
 #group_filter label .input-sm{
     width: auto;
 }
@@ -63,4 +84,8 @@ nav .brand-logo i.material-icons{
 }
 #content{
     width: 75%;
+}
+.input-field input[type=text].invalid {
+    border-bottom: 1px solid red;
+    box-shadow: 0 1px 0 0 red;
 }

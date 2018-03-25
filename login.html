@@ -19,17 +19,17 @@
                 <div class="card-content">
                     <span class="card-title center-align">Авторизация</span>
                     <div class="row">
-                        <form action="/saveUser" id="authForm" class="center-align">
+                        <form action="#" id="authForm" class="center-align">
                             <div class="row">
                                 <div class="input-field">
-                                    <input required oninvalid="this.setCustomValidity('Заполните поле')" id="login" type="text" class="validate">
+                                    <input id="login" type="text" name="login" class="validate">
                                     <label for="login">Логин</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="input-field">
-                                    <input required oninvalid="this.setCustomValidity('Заполните поле')" id="password" type="password" class="validate">
-                                    <label for="password">Пароль</label>
+                                    <input id="password" type="password" name="authPassword" class="validate">
+                                    <label for="login">Пароль</label>
                                     <a href="#!" id="showPassword"><i class="material-icons">remove_red_eye</i></a>
                                 </div>
                             </div>
@@ -45,6 +45,7 @@
 
 
     <script src="js/jquery-3.3.1.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js" charset="utf-8"></script>
     <script src="js/materialize.js" charset="utf-8"></script>
     <script src="js/main.js" charset="utf-8"></script>
 </body>
