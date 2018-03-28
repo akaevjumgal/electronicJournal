@@ -2,6 +2,9 @@
 $('document').ready( function() {
     /*For mobile version of left side bar*/
     $(".button-collapse").sideNav();
+    /*For dropdown*/
+
+    $(".dropdown-trigger").dropdown();
 
 /*Registration form validation*/
     $("#reg_form").validate({
@@ -12,9 +15,8 @@ $('document').ready( function() {
             last_name: {
                 required: true
             },
-            email: {
-                required: true,
-                email: true
+            username: {
+                required: true
             },
             pass: {
                 required: true,
@@ -23,28 +25,47 @@ $('document').ready( function() {
             confirm_password: {
                 required: true,
                 equalTo: "#password"
+            },
+            checkboxAdmin: {
+                required: true
+            },
+            checkboxTeacher: {
+                required: true
+            },
+            checkboxStudent: {
+                required: true
             }
         },
         messages: {
             first_name:{
-                required: "Заполните поле"
+                required: ""
             },
             last_name:{
-                required: "Заполните поле"
+                required: ""
             },
-            email: {
-                required: "Заполните поле"
+            username: {
+                required: ""
             },
             pass: {
-                required: "Заполните поле",
+                required: "",
                 minlength: "Не менее 6 символов"
             },
             confirm_password: {
-                required: "Заполните поле",
+                required: "Заполните все поля",
                 equalTo: "Пароли должны совпадать"
+            },
+            checkboxAdmin: {
+                required: "*"
+            },
+            checkboxTeacher: {
+                required: ""
+            },
+            checkboxStudent: {
+                required: ""
             }
         },
-        errorElement: "span"
+        errorElement: "span",
+        errorClass: "invalid"
     });
     /*Authorization form validation*/
     $('#authForm').validate({
@@ -67,7 +88,9 @@ $('document').ready( function() {
             }
         },
         errorElement: "span"
-    })
+    });
+
+
 });
 /*Rendering tables with lesson*/
 function renderTable() {
@@ -90,13 +113,32 @@ function renderTable() {
 };
 /*Show password button*/
 $('#showPassword').click(function(){
-  if ($('#password').prop('type') == 'password') {
-    $('#password').prop('type', 'text')
+  if ($('#password').prop('type') == 'password' && $('#confirm_password').prop('type') == 'password') {
+    $('#password').prop('type', 'text');
+    $('#confirm_password').prop('type', 'text');
 } else {
-    $('#password').prop('type', 'password')
+    $('#password').prop('type', 'password');
+    $('#confirm_password').prop('type', 'password');
 }
 });
 
+/*Switch cases*/
+$('#checkboxAdmin').click(function(){
+    if($('#checkboxAdmin').prop('checked', true) || $('#checkboxTeacher').prop('checked', true)){
+        $('#checkboxStudent').prop('checked', false);
+    };
+});
+$('#checkboxTeacher').click(function(){
+    if($('#checkboxTeacher').prop('checked', true)){
+        $('#checkboxStudent').prop('checked', false);
+    };
+});
+$('#checkboxStudent').click(function(){
+    if($('#checkboxStudent').prop('checked', true)){
+        $('#checkboxAdmin').prop('checked', false);
+        $('#checkboxTeacher').prop('checked', false);
+    };
+});
 // function addNewGroup() {
 //     var li = $('<li>', { "id": "inGroup" }).insertBefore("#newGroup");
 //     var input = $('<input>', {"type": "text", "placeholder": "введите название"}).appendTo(li);
