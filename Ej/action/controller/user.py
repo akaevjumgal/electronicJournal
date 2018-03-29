@@ -1,7 +1,6 @@
-from action.model import users
-from action.model.configs import db_path
-
-userdb= users(db_path)
+from action.model.user import adduser
+def addusercontroller(by):
+    return adduser(by)
 
 class usercontroller:
     def adduser(self, data):

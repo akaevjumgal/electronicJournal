@@ -24,7 +24,12 @@
                 </a>
 
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="/logout" id="authUser">Пользователь</a></li>
+                    <ul id="user-settings" class="dropdown-content">
+                        <li><a href="#!">Настройки</a></li>
+
+                    </ul>
+                     <li><a class="dropdown-trigger" href="#" id="authUser" data-activates="user-settings">{{name}}<i class="material-icons right">arrow_drop_down</i></a></li>
+                    <li><a href="/logout">Выйти</a></li>
                 </ul>
 
             </div>

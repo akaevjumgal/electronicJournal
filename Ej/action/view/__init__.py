@@ -1,5 +1,6 @@
 from action import app
-from action.view  import user
+from action.view import user
+from action.view import table
 from flask import jsonify
 
 @app.route('/datatable',methods=['GET'])
