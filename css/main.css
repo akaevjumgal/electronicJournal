@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:500');
 *{
     outline: none;
 }
@@ -10,12 +9,20 @@ body{
 input, a{
     outline: none;
 }
+a:hover{
+    color: inherit;
+}
 .brand-logo i{
     margin: 0 20px;
 }
 nav .brand-logo i.material-icons{
     font-size: 30px;
 }
+a.brand-logo{
+    font-size: 20px;
+
+}
+
 .nav-extended{
     z-index: 99999999;
 }
@@ -24,11 +31,12 @@ nav .brand-logo i.material-icons{
 }
 .side-nav{
     top: auto;
+    width: 18.75%;
 }
 #authUser{
     margin: 0 10px;
-
 }
+
 .card{
     margin: 13% auto;
     max-width: 400px;
@@ -61,7 +69,7 @@ nav .brand-logo i.material-icons{
     color: #ff1000;
     font-family: 'Roboto', sans-serif;
 }
-.invalid {
+#reg_form.invalid {
     border-bottom: 1px solid red;
     box-shadow: 0 1px 0 0 red;
 }
@@ -84,20 +92,48 @@ nav .brand-logo i.material-icons{
 }
 
 /*CSS customization for tables*/
-.mdl-data-table{
-    float: right;
-}
-.dataTable{
-    max-width: 950px;
-    width: 100%;
-    overflow: hidden;
-}
-#group_filter label .input-sm{
+#content{
     width: auto;
+    margin: 0 15px;
 }
 #inGroup{
     padding: 0 30px;
 }
-#content{
-    width: 100%;
+#tabs-swipe-demo{
+    margin: 10px 0 20px 0;
+}
+div.ui.tab-segment.active{
+    margin: 10px;
+    padding: 10px;
+}
+div.ui.secondary.pointing.menu{
+    margin: 15px 10px;
+    transition: .4ms;
+}
+.ui.secondary.pointing.menu .active.item,
+.ui.secondary.pointing.menu .active.item:hover{
+    color: #5c6bc0;
+    border-color: #5c6bc0;
+}
+.ui.tabular.menu .active.item{
+    border-color: #5c6bc0;
+}
+.ui.tabular.menu{
+    border-bottom: 1px solid #5c6bc0;
+}
+.ui.attached.segment{
+    border: 1px solid #5c6bc0;
+}
+.ui.tabular.menu .active.item{
+    background-color: #5c6bc0;
+    color: #fff;
+}
+div.ui.segment{
+    border: 1px solid #5c6bc0;
+}
+#reg_form span{
+    color: #5c6bc0;
+}
+.optgroup-option label::before{
+    margin-top: -10px;
 }

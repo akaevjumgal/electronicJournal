@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Добро пожаловать</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/semantic.css">
+    <link rel="stylesheet" href="css/tabulator.css">
+    <link rel="stylesheet" href="css/materialize.css">
+    <link rel="stylesheet" href="css/main.css">
+
+    <style media="screen">
+        .row .col {
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body >
+    <div class="navbar-fixed">
+        <nav class="nav-extended green lighten-1">
+            <div class="nav-wrapper">
+                <a href="/" class="brand-logo">
+                    <i class="material-icons">assignment</i>
+                    Журнал
+                </a>
+                <a href="#" data-activates="mobile-demo" class="button-collapse">
+                    <i class="material-icons">menu</i>
+                </a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <!-- Dropdown Structure -->
+                    <ul id="user-settings" class="dropdown-content">
+                        <li><a href="#!">настройки</a></li>
+                    </ul>
+                    <li><a class="dropdown-trigger" href="#!" data-activates="user-settings">Пользователь<i class="material-icons right">arrow_drop_down</i></a></li>
+                    <li><a href="#">Выйти</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <div class="ui grid stackable">
+        <div class="three wide column">
+            <ul id="mobile-demo" class="side-nav fixed">
+                <li><a href="#" class="subheader">Все группы</a></li>
+                <ul id="subheader"></ul>
+                <li class="divider"></li>
+                <!-- <li style="width: auto;" id="newGroup"><a href="#" class="btn waves-effect green lighten-1" onclick="addNewGroup()">Добавить</a></li> -->
+            </ul>
+        </div>
+        <div class="thirteen wide column">
+            <div id="content">
+              <div class="dynamic no example">
+
+                <div class="ui pointing secondary menu">
+                  <a class="active item" data-tab="first">First</a>
+                  <a class="item" data-tab="second">Second</a>
+                  <a class="item" data-tab="third">Third</a>
+                </div>
+                <div class="ui active tab segment" data-tab="first">
+                  <h3 class="ui header">AJAX Tab One</h3>
+                  <img class="ui wireframe image" src="/images/wireframe/paragraph.png">
+                  <img class="ui wireframe image" src="/images/wireframe/paragraph.png">
+                  <img class="ui wireframe image" src="/images/wireframe/paragraph.png">
+                </div>
+                <div class="ui tab segment" data-tab="second">
+                </div>
+                <div class="ui tab segment" data-tab="third">
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="js/jquery-3.3.1.js" charset="utf-8"></script>
+    <script src="js/jquery-ui.js" charset="utf-8"></script>
+    <script src="js/materialize.js" charset="utf-8"></script>
+    <script src="js/semantic.js" charset="utf-8"></script>
+    <script src="js/moment.js"></script>
+    <script src="js/tabulator.js" charset="utf-8"></script>
+    <script src="js/main.js" charset="utf-8"></script>
+    <script src="js/axios.js"></script>
+    <script>
+    $('.item')
+      .tab({
+        cache: false,
+        apiSettings: {
+          loadingDuration : 300,
+          mockResponse    : function(settings) {
+            var response = {
+              first  : 'AJAX Tab One',
+              second : 'AJAX Tab Two',
+              third  : 'AJAX Tab Three'
+            };
+            return response[settings.urlData.tab];
+          }
+        },
+        context : 'parent',
+        auto    : true,
+        path    : '/'
+      });
+    </script>
+
+</body>
+
+</html>
