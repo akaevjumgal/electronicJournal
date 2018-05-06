@@ -1,110 +1,94 @@
 <!DOCTYPE html>
-<html lang="ru">
-
+<html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Добро пожаловать</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="css/semantic.css">
-    <link rel="stylesheet" href="css/tabulator.css">
-    <link rel="stylesheet" href="css/materialize.css">
-    <link rel="stylesheet" href="css/main.css">
-
-    <style media="screen">
-        .row .col {
-            padding: 0;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue Tab</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="css/semantic.css">
+  <link rel="stylesheet" href="css/materialize.css">
 </head>
+<body>
 
-<body >
-    <div class="navbar-fixed">
-        <nav class="nav-extended green lighten-1">
-            <div class="nav-wrapper">
-                <a href="/" class="brand-logo">
-                    <i class="material-icons">assignment</i>
-                    Журнал
-                </a>
-                <a href="#" data-activates="mobile-demo" class="button-collapse">
-                    <i class="material-icons">menu</i>
-                </a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <!-- Dropdown Structure -->
-                    <ul id="user-settings" class="dropdown-content">
-                        <li><a href="#!">настройки</a></li>
-                    </ul>
-                    <li><a class="dropdown-trigger" href="#!" data-activates="user-settings">Пользователь<i class="material-icons right">arrow_drop_down</i></a></li>
-                    <li><a href="#">Выйти</a></li>
-                </ul>
-            </div>
-        </nav>
+
+<div id="app">
+  <div class="row">
+    <div class="col l3 s12">
+       <ul id="slide-out" class="side-nav fixed">
+        <li><a href="#" class="subheader">Все группы</a></li>
+        <li v-for="group in groups"><a href="#" class="waves-effect">{{ group.name }}</a></li>
+        <li><div class="divider"></div></li>
+      </ul>
+        <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
     </div>
-
-    <div class="ui grid stackable">
-        <div class="three wide column">
-            <ul id="mobile-demo" class="side-nav fixed">
-                <li><a href="#" class="subheader">Все группы</a></li>
-                <ul id="subheader"></ul>
-                <li class="divider"></li>
-                <!-- <li style="width: auto;" id="newGroup"><a href="#" class="btn waves-effect green lighten-1" onclick="addNewGroup()">Добавить</a></li> -->
-            </ul>
+    <!-- <div class="col l9 s12">
+      <div class="ui pointing secondary menu">
+            <a class="item" v-for="subject in subjects" v-bind:data-tab="'{{subject.dis_tn}}'">{{ subject.name }}</a>
+      </div>
+        <div class="ui tab segment" v-for="subject in subjects" v-bind:data-tab="'{{subject.dis_tn}}'">
+          <div class="ui top attached tabular menu">
+            <a class="item" v-for="type in types" v-bind:data-tab="'{{types.dis_tn}}' + '/' + '{{type.dis_type}}'">{{type.dis_tn}}</a>
+          </div>
+          <div class="ui bottom attached tab segment" v-bind:data-tab="'{{types.dis_tn}}' + '/' + '{{type.dis_type}}'">1A</div>
         </div>
-        <div class="thirteen wide column">
-            <div id="content">
-              <div class="dynamic no example">
-
-                <div class="ui pointing secondary menu">
-                  <a class="active item" data-tab="first">First</a>
-                  <a class="item" data-tab="second">Second</a>
-                  <a class="item" data-tab="third">Third</a>
-                </div>
-                <div class="ui active tab segment" data-tab="first">
-                  <h3 class="ui header">AJAX Tab One</h3>
-                  <img class="ui wireframe image" src="/images/wireframe/paragraph.png">
-                  <img class="ui wireframe image" src="/images/wireframe/paragraph.png">
-                  <img class="ui wireframe image" src="/images/wireframe/paragraph.png">
-                </div>
-                <div class="ui tab segment" data-tab="second">
-                </div>
-                <div class="ui tab segment" data-tab="third">
-                </div>
-              </div>
-            </div>
-        </div>
-    </div>
+    </div> -->
+  </div>
+</div>
 
 
 
-    <script src="js/jquery-3.3.1.js" charset="utf-8"></script>
-    <script src="js/jquery-ui.js" charset="utf-8"></script>
-    <script src="js/materialize.js" charset="utf-8"></script>
-    <script src="js/semantic.js" charset="utf-8"></script>
-    <script src="js/moment.js"></script>
-    <script src="js/tabulator.js" charset="utf-8"></script>
-    <script src="js/main.js" charset="utf-8"></script>
-    <script src="js/axios.js"></script>
-    <script>
-    $('.item')
-      .tab({
-        cache: false,
-        apiSettings: {
-          loadingDuration : 300,
-          mockResponse    : function(settings) {
-            var response = {
-              first  : 'AJAX Tab One',
-              second : 'AJAX Tab Two',
-              third  : 'AJAX Tab Three'
-            };
-            return response[settings.urlData.tab];
-          }
-        },
-        context : 'parent',
-        auto    : true,
-        path    : '/'
-      });
-    </script>
+  <script src="js/jquery-3.3.1.js"></script>
+  <script src="js/materialize.js" charset="utf-8"></script>
+  <script src="js/semantic.js"></script>
+  <script src="js/vue.js"></script>
+  <script src="js/axios.js"></script>
+  <script>
+  $('document').ready(function(){
+    $(".button-collapse").sideNav();
+    $('#app .menu .item').tab();
+  })
+    $('.item').tab();
+    var app = new Vue({
+      el: '#app',
+      data: {
+        groups: [],
+        subjects: [],
+        types: []
+      },
+        created() {
+          var i, j, k;
+          var groupsURL = 'https://ejj.herokuapp.com/get_groups',
+              subjectsURL = 'https://ejj.herokuapp.com/get_disciplines/',
+              typeURL = 'https://ejj.herokuapp.com/get_type/';
 
+
+            axios.get(groupsURL)
+              .then(response => {
+                this.groups = response.data.groups;
+                // console.log(this.groups);
+                for(i = 0; i < this.groups.length; i++){
+                  var subject = axios.get(subjectsURL + this.groups[i].id);
+                }
+                function getSubject(group_id, response){
+                  for(i = 0; i < this.groups.length; i++){
+                    subject.then(response => {
+                      this.subjects = response.data.list_of_discipline;
+                    })
+                  }
+                }
+              });
+
+              function getType(){
+                for(j = 0; j < this.subjects.length; j++){
+                    type = axios.get(typeURL + this.groups[i].id + "&dis=" + this.subjects[j].id + "&sub=" + this.subjects[j].sub_id);
+                    type.then(response => {
+                      this.type = response.data.type;
+                    })
+                }
+              }
+        }
+    });
+
+  </script>
 </body>
-
 </html>

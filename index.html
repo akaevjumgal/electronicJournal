@@ -90,9 +90,9 @@
   ////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
   var urlGroupName = 'https://ejj.herokuapp.com/get_groups';
-  var urlSubjectName = 'http://192.168.0.116:5000/get_disciplines/';
-  var urlSubGroup = "http://192.168.0.116:5000/get_group/id=";
-  var urlGetSubjectType = "http://192.168.0.116:5000/get_type/"
+  var urlSubjectName = 'http://10.42.0.206:5000/get_disciplines/';
+  var urlSubGroup = "http://10.42.0.206:5000/get_group/id=";
+  var urlGetSubjectType = "http://10.42.0.206:5000/get_type/"
 
   /*///////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     getGroup - This function is nessesary to get data about Groups
@@ -157,7 +157,7 @@
                 var ui_secondary_menu_item = $('<a>', {
                     "class": "item tmp",
                     "data-tab": id_name,
-                    //"onclick": "renderDisType(" + id_name + "," + i + "," + group_id + "," + dis_id + "," + sub_id + ")"
+                    "onclick": "renderDisType(" + id_name + "," + i + "," + group_id + "," + dis_id + "," + sub_id + ")"
                 }).html(data[i].name).appendTo(ui_secondary_menu);
                 if(i == 0){
                   ui_secondary_menu_item.addClass("active");
@@ -191,12 +191,12 @@
             "class": "ui top attached tabular menu",
         }).appendTo(ui_tab_segment);
         for (var j = 0; j < dataType.length; j++) {
-            var ui_top_attached_tabular_menu_item = $('<a>', {//This is subTab tmp
+            var ui_top_attached_tabular_menu_item = $('<link>', {//This is subTab tmp
                 "data-tab": id_name + "/" + dataType[j].dis_type,
                 "class": "item",
-                "onclick": "renderTable(" + id_name + "," + group_id + "," + sub_id + "," + dis_id + ")",
+                "onload": "renderTable(" + id_name + "," + group_id + "," + sub_id + "," + dis_id + ");",
             }).html(dataType[j].dis_tn).appendTo(ui_top_attached_tabular_menu);
-
+            // renderTable(id_name,group_id,sub_id,dis_id);
             var ui_bottom_attached_tab_segment = $('<div>', {
                 "id": id_name,
                 "data-tab": id_name + "/" + dataType[j].dis_type,
@@ -206,8 +206,9 @@
             if(j == 0 && i==0){
               ui_top_attached_tabular_menu_item.addClass("active");
               ui_bottom_attached_tab_segment.addClass("active");
+
             }
-              $('.cont.active').load(renderTable(id_name, group_id, sub_id, dis_id));
+              // $('.cont.active').load(renderTable(id_name, group_id, sub_id, dis_id));
               $('.item').tab();
         }
         }
@@ -284,7 +285,7 @@
 
             getJSON = axios.get(urlSubGroup + group_id + "&sub=" + sub_id + "&dis=" + dis_id);
             getJSON.then(function(response) {
-                $('.cont').tabulator("setData", response.data);
+                $('.cont.active').tabulator("setData", response.data);
 
             }).catch(error => {
 
