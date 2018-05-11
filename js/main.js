@@ -4,7 +4,6 @@ $('document').ready(function(){
     /*For dropdown*/
     $('select').material_select();
     $(".dropdown-trigger").dropdown();
-
     /*Registration form validation*/
     // $("#reg_form").validate({
     //     rules: {

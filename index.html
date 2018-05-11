@@ -18,7 +18,7 @@
     </style>
 </head>
 
-<body >
+<body>
     <div class="navbar-fixed">
         <nav class="nav-extended green lighten-1">
             <div class="nav-wrapper">
@@ -41,8 +41,8 @@
         </nav>
     </div>
 
-    <div class="ui grid stackable">
-        <div class="three wide column">
+    <div class="row">
+        <div class="col l3">
             <ul id="mobile-demo" class="side-nav fixed">
                 <li><a href="#" class="subheader">Все группы</a></li>
                 <ul id="subheader"></ul>
@@ -50,7 +50,7 @@
                 <!-- <li style="width: auto;" id="newGroup"><a href="#" class="btn waves-effect green lighten-1" onclick="addNewGroup()">Добавить</a></li> -->
             </ul>
         </div>
-        <div class="thirteen wide column">
+        <div class="col l9">
             <div id="content"></div>
         </div>
     </div>
@@ -89,18 +89,38 @@
               All static URL's for getting data by API
   ////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-  var urlGroupName = 'https://ejj.herokuapp.com/get_groups';
-  var urlSubjectName = 'http://10.42.0.206:5000/get_disciplines/';
-  var urlSubGroup = "http://10.42.0.206:5000/get_group/id=";
-  var urlGetSubjectType = "http://10.42.0.206:5000/get_type/"
+  // var urlGroupName = 'https://ejj.herokuapp.com/get_groups';
+  // var urlSubjectName = 'https://ejj.herokuapp.com/get_disciplines/';
+  // var urlSubGroup = "https://ejj.herokuapp.com/get_group/id=";
+  // var urlGetSubjectType = "https://ejj.herokuapp.com/get_type/"
 
+  var urlGroupName = 'http://192.168.43.155:5000/get_groups';
+  var urlSubjectName = 'http://192.168.43.155:5000/get_disciplines/';
+  var urlSubGroup = "http://192.168.43.155:5000/get_group/id=";
+  var urlGetSubjectType = "http://192.168.43.155:5000/get_type/"
   /*///////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     getGroup - This function is nessesary to get data about Groups
   ////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-  getGroup = axios.get(urlGroupName)
-  getGroup.then(function(response) {
-      data = response.data.groups;
+  // getGroup = axios.get(urlGroupName)
+  // getGroup.then(function(response) {
+  //     data = response.data;
+  //     for (var i = 0; i < data.length; i++) {
+  //         var li = $('<li>').appendTo('#subheader');
+  //         var a = $('<a>', {
+  //             "class": "waves-effect loadSubject",
+  //             "onclick": "getSubject(" + data[i].id + ")"
+  //         }).html(data[i].name).appendTo(li);
+  //         if(i == 0){
+  //           $('.loadSubject').on("load", getSubject(data[i].id));
+  //         }
+  //     };
+  //   }).catch(error => {
+  //       return error.data;
+  //   });
+
+    axios.get(urlGroupName).then(function(response) {
+      data = response.data;
       for (var i = 0; i < data.length; i++) {
           var li = $('<li>').appendTo('#subheader');
           var a = $('<a>', {
@@ -108,73 +128,99 @@
               "onclick": "getSubject(" + data[i].id + ")"
           }).html(data[i].name).appendTo(li);
           if(i == 0){
-            $('.loadSubject').bind("load", getSubject(data[i].id));
+            $('.loadSubject').on("load", getSubject(data[i].id));
           }
-      };
+      }
     }).catch(error => {
-        return error.data;
-    });
+      return error.data;
+  });
+    function getSubject(group_id){
+      axios.get(urlSubjectName + group_id).then(function(response) {
+        if (t != group_id || t == group_id) {
+              $('#content').empty();
+        }
+            t = group_id;
+            data = response.data.list_of_discipline;
+              var main_tab = $('<div>', {
+                  "id": "main_tab"
+              }).appendTo('#content');
+              var ui_secondary_menu = $('<div>', {
+                  "class": "ui pointing secondary menu"
+              }).appendTo(main_tab);
+
+              for (var i = 0; i < data.length; i++) {
+                  var ui_secondary_menu_item = $('<a>', {
+                      "class": "item tmp",
+                      "data-tab": data[i].name_id,
+                      "onclick": "renderDisType(" + data[i].name_id + "," + i + "," + group_id + "," + data[i].id + "," + data[i].sub_id + ")"
+                  }).html(data[i].name).appendTo(ui_secondary_menu);
+                  if(i == 0){
+                    ui_secondary_menu_item.addClass("active");
+                  }
+                  $('.tmp').click(renderDisType(data[i].name_id, i, group_id, data[i].id, data[i].sub_id));
+                  $('.item').tab();
+            }
+    })
+}
     /*//////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
        getSubjectName - This function is nessesary to get data about Disciplines
     ////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-    function getSubjectName(group_id){
-        return axios({
-          method: "GET",
-          url: urlSubjectName + group_id
-        }).then(function(response) {
-               return response.data
-         }).catch(error => {
-             return error.data;
-         });
-    }
+    // function getSubjectName(group_id){
+    //     return axios({
+    //       method: "GET",
+    //       url: urlSubjectName + group_id
+    //     }).then(function(response) {
+    //            return response.data
+    //      }).catch(error => {
+    //          return error.data;
+    //      });
+    // }
 
     /*//////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
        getSubject - This function is nessesary to get data about Disciplines
     ////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-  function getSubject(group_id) {
-
-      if (t != group_id || t == group_id) {
-          $('#content').empty();
-      }
-      t = group_id;
-
-        allSubjects = getSubjectName(group_id);
-
-        allSubjects.then(function(response) {
-          data = response.list_of_discipline;
-            var main_tab = $('<div>', {
-                "id": "main_tab"
-            }).appendTo('#content');
-            var ui_secondary_menu = $('<div>', {
-                "class": "ui pointing secondary menu"
-            }).appendTo(main_tab);
-
-            for (var i = 0; i < data.length; i++) {
-                sub_id = data[i].sub_id;
-                dis_id = data[i].id;
-                var id_name = toLatin(data[i].name_id.replace(/\s/g, ''));
-                var ui_secondary_menu_item = $('<a>', {
-                    "class": "item tmp",
-                    "data-tab": id_name,
-                    "onclick": "renderDisType(" + id_name + "," + i + "," + group_id + "," + dis_id + "," + sub_id + ")"
-                }).html(data[i].name).appendTo(ui_secondary_menu);
-                if(i == 0){
-                  ui_secondary_menu_item.addClass("active");
-                }
-                $('.tmp').click(renderDisType(id_name, i, group_id, dis_id, sub_id));
-                // $('.secondary').load(renderDisType(id_name, i, group_id, dis_id, sub_id));
-                $('.item').tab();
-            }
-
-        })
-    }
-
+  // function getSubject(group_id) {
+  //
+  //     if (t != group_id || t == group_id) {
+  //         $('#content').empty();
+  //     }
+  //     t = group_id;
+  //
+  //       allSubjects = getSubjectName(group_id);
+  //
+  //       allSubjects.then(function(response) {
+  //         data = response.list_of_discipline;
+  //           var main_tab = $('<div>', {
+  //               "id": "main_tab"
+  //           }).appendTo('#content');
+  //           var ui_secondary_menu = $('<div>', {
+  //               "class": "ui pointing secondary menu"
+  //           }).appendTo(main_tab);
+  //
+  //           for (var i = 0; i < data.length; i++) {
+  //               sub_id = data[i].sub_id;
+  //               dis_id = data[i].id;
+  //               console.log(data[i].name);
+  //               var id_name = toLatin(data[i].name_id.replace(/\s/g, ''));
+  //               var ui_secondary_menu_item = $('<a>', {
+  //                   "class": "item tmp",
+  //                   "data-tab": id_name,
+  //                   "onclick": "renderDisType(" + id_name + "," + i + "," + group_id + "," + dis_id + "," + sub_id + ")"
+  //               }).html(data[i].name).appendTo(ui_secondary_menu);
+  //               if(i == 0){
+  //                 ui_secondary_menu_item.addClass("active");
+  //               }
+  //               $('.tmp').click(renderDisType(id_name, i, group_id, dis_id, sub_id));
+  //               $('.item').tab();
+  //           }
+  //       })
+  //   }
+  //
     function renderDisType(id_name, i, group_id, dis_id, sub_id) {
-      if(!$(".ui.tab.segment").is(":empty")){
-         $('.segment[data-tab='+ id_name + "]").remove();
-      }
-
+      // if(!$(".ui.tab.segment").is(":empty")){
+      //    $('.segment[data-tab='+ id_name + "]").remove();
+      // }
       var response = axios.get(urlGetSubjectType + group_id + "&dis=" + dis_id + "&sub=" + sub_id);
 
       function getType(id_name, response){
@@ -183,7 +229,6 @@
             "data-tab": id_name,
             "class": "ui tab segment"
         }).appendTo("#main_tab");
-        // console.log(id_name);
         if(i == 0){
           ui_tab_segment.addClass("active");
         }
@@ -191,12 +236,11 @@
             "class": "ui top attached tabular menu",
         }).appendTo(ui_tab_segment);
         for (var j = 0; j < dataType.length; j++) {
-            var ui_top_attached_tabular_menu_item = $('<link>', {//This is subTab tmp
+            var ui_top_attached_tabular_menu_item = $('<a>', {//This is subTab tmp
                 "data-tab": id_name + "/" + dataType[j].dis_type,
                 "class": "item",
-                "onload": "renderTable(" + id_name + "," + group_id + "," + sub_id + "," + dis_id + ");",
+                "onclick": "renderTable(" + id_name + "," + group_id + "," + sub_id + "," + dis_id + ");",
             }).html(dataType[j].dis_tn).appendTo(ui_top_attached_tabular_menu);
-            // renderTable(id_name,group_id,sub_id,dis_id);
             var ui_bottom_attached_tab_segment = $('<div>', {
                 "id": id_name,
                 "data-tab": id_name + "/" + dataType[j].dis_type,
@@ -206,13 +250,13 @@
             if(j == 0 && i==0){
               ui_top_attached_tabular_menu_item.addClass("active");
               ui_bottom_attached_tab_segment.addClass("active");
-
             }
-              // $('.cont.active').load(renderTable(id_name, group_id, sub_id, dis_id));
+              $('.cont.active').load(renderTable(id_name, group_id, sub_id, dis_id));
               $('.item').tab();
         }
         }
         response.then(getType.bind(response, id_name));
+
       }
 
     /*//////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -242,7 +286,6 @@
                 return editor;
             };
 
-            // var tab_id = id_name.id;
 
             $('.cont').tabulator({
                 height: "auto",
@@ -283,14 +326,13 @@
                 }
             });
 
-            getJSON = axios.get(urlSubGroup + group_id + "&sub=" + sub_id + "&dis=" + dis_id);
-            getJSON.then(function(response) {
+            axios.get(urlSubGroup + group_id + "&sub=" + sub_id + "&dis=" + dis_id).then(function(response) {
                 $('.cont.active').tabulator("setData", response.data);
-
             }).catch(error => {
-
+                response.error.data;
             });
         }
+
     </script>
 
 </body>

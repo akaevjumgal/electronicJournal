@@ -5,90 +5,113 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vue Tab</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="css/semantic.css">
   <link rel="stylesheet" href="css/materialize.css">
+  <style media="screen">
+    li.indicator{
+      background-color: #3f51b5;
+    }
+  </style>
 </head>
 <body>
 
-
 <div id="app">
   <div class="row">
-    <div class="col l3 s12">
-       <ul id="slide-out" class="side-nav fixed">
-        <li><a href="#" class="subheader">Все группы</a></li>
-        <li v-for="group in groups"><a href="#" class="waves-effect">{{ group.name }}</a></li>
-        <li><div class="divider"></div></li>
-      </ul>
-        <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+    <div class="col l3">
+      <ul id="slide-out" class="side-nav fixed"></ul>
     </div>
-    <!-- <div class="col l9 s12">
-      <div class="ui pointing secondary menu">
-            <a class="item" v-for="subject in subjects" v-bind:data-tab="'{{subject.dis_tn}}'">{{ subject.name }}</a>
-      </div>
-        <div class="ui tab segment" v-for="subject in subjects" v-bind:data-tab="'{{subject.dis_tn}}'">
-          <div class="ui top attached tabular menu">
-            <a class="item" v-for="type in types" v-bind:data-tab="'{{types.dis_tn}}' + '/' + '{{type.dis_type}}'">{{type.dis_tn}}</a>
-          </div>
-          <div class="ui bottom attached tab segment" v-bind:data-tab="'{{types.dis_tn}}' + '/' + '{{type.dis_type}}'">1A</div>
-        </div>
-    </div> -->
+    <div class="col l9">
+      <div id="content" class="center"></div>
+      <div id="sub-tabs-content"></div>
+    </div>
   </div>
+ <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
 </div>
 
-
-
-  <script src="js/jquery-3.3.1.js"></script>
+  <script src="js/jquery-3.3.1.js" charset="utf-8"></script>
+  <script src="js/jquery-ui.js" charset="utf-8"></script>
   <script src="js/materialize.js" charset="utf-8"></script>
-  <script src="js/semantic.js"></script>
+  <script src="js/semantic.js" charset="utf-8"></script>
+  <script src="js/moment.js"></script>
+  <script src="js/tabulator.js" charset="utf-8"></script>
+  <script src="js/main.js" charset="utf-8"></script>
   <script src="js/vue.js"></script>
   <script src="js/axios.js"></script>
   <script>
-  $('document').ready(function(){
-    $(".button-collapse").sideNav();
-    $('#app .menu .item').tab();
-  })
-    $('.item').tab();
-    var app = new Vue({
+  var urlGroupName = 'https://ejj.herokuapp.com/get_groups';
+  var urlSubjectName = 'https://ejj.herokuapp.com/get_disciplines/';
+  var urlSubGroup = "https://ejj.herokuapp.com/get_group/id=";
+  var urlGetSubjectType = "https://ejj.herokuapp.com/get_type/"
+
+  // var urlGroupName = 'http://10.42.0.206:5000/get_groups';
+  // var urlSubjectName = 'http://10.42.0.206:5000/get_disciplines/';
+  // var urlSubGroup = "http://10.42.0.206:5000/get_group/id=";
+  // var urlGetSubjectType = "http://10.42.0.206:5000/get_type/"
+
+  var i, j, k;
+    let app = new Vue({
       el: '#app',
-      data: {
-        groups: [],
-        subjects: [],
-        types: []
-      },
-        created() {
-          var i, j, k;
-          var groupsURL = 'https://ejj.herokuapp.com/get_groups',
-              subjectsURL = 'https://ejj.herokuapp.com/get_disciplines/',
-              typeURL = 'https://ejj.herokuapp.com/get_type/';
+      methods: {
+        renderMainContent: function(check){
 
+          axios.get(urlGroupName).then(response => {
+            groups = response.data;
+            var groupUl = $('<ul>', {"class": "tabs"}).appendTo("#slide-out");
+            for(i = 0; i < groups.length; i++){
+                var groupLi = $('<li>', {"class": "tab"}).appendTo(groupUl);
+                var groupLink = $('<a>', {
+                  "href": "#" + groups[i].id,
+                  "class": "indigo-text tab-item",
+                  // "v-on:click": "getSubject(" + groups[i].id + "," + i + ")"
+                  // "v-on:click": "alert('dfsfdsf')"
+                }).html(groups[i].name).appendTo(groupLi);
+                var div = $('<div>', {"id": groups[i].id}).appendTo('#content');
+                var cont = $('<div>', {"id": "group" + groups[i].id}).appendTo('#sub-tabs-content');
 
-            axios.get(groupsURL)
-              .then(response => {
-                this.groups = response.data.groups;
-                // console.log(this.groups);
-                for(i = 0; i < this.groups.length; i++){
-                  var subject = axios.get(subjectsURL + this.groups[i].id);
-                }
-                function getSubject(group_id, response){
-                  for(i = 0; i < this.groups.length; i++){
-                    subject.then(response => {
-                      this.subjects = response.data.list_of_discipline;
-                    })
-                  }
-                }
-              });
+                if(i==1 && check){break;}
+                this.getSubject(groups[i].id, i);
+                $('#slide-out .tab-item').click(function(){
+                  this.getSubject(groups[i].id, i)
+                });
+            }
+            $('.tabs').tabs();
+          })
+        },
+        getSubject: function(group_id, i){
+          axios.get(urlSubjectName + groups[i].id).then(response => {
+            subjects = response.data.list_of_discipline;
+            var subjectUl = $('<ul>', {"class": "tabs"}).appendTo("div[id=" + group_id + "]");
+            for(j = 0; j < subjects.length; j++){
+              if(group_id == subjects[j].group_id){
+                var subjectLi = $('<li>', {"class": "tab"}).appendTo(subjectUl);
+                var subjectLink = $('<a>', {"href": "#" + subjects[j].name_id, "class": "indigo-text"}).html(subjects[j].name).appendTo(subjectLi);
 
-              function getType(){
-                for(j = 0; j < this.subjects.length; j++){
-                    type = axios.get(typeURL + this.groups[i].id + "&dis=" + this.subjects[j].id + "&sub=" + this.subjects[j].sub_id);
-                    type.then(response => {
-                      this.type = response.data.type;
-                    })
-                }
+                var div = $('<div>', {"id": subjects[j].name_id}).appendTo('div[id=group' + group_id);
+                axios.get(urlGetSubjectType + groups[i].id + "&dis=" + subjects[j].id + "&sub=" + subjects[j].sub_id).then(this.getType.bind(response, subjects[j].name_id, j));
               }
-        }
-    });
+            }
+            $('a[href=' + subjects[0].name_id + "]").addClass("active");
+            console.log(subjects[0].name_id);
+          $('.tabs').tabs();
+          });
 
+        },
+        getType: function(subject_id, j, response){
+          types = response.data.type_of_discipline;
+          var typeUl = $('<ul>', {"class": "tabs"}).appendTo("div[id=" + subject_id + "]");
+          for(k = 0; k < types.length; k++){
+            var TypeLi = $('<li>', {"class": "tab"}).appendTo(typeUl);
+            var TypeLink = $('<a>', {"href": "#" + types[k].tn_eng + types[k].dis_type}).html(types[k].dis_tn).appendTo(TypeLi);
+            // if(k == 0){
+            //   TypeLink.addClass("active");
+            // }
+
+          }
+        }
+      }
+    });
+    $('document').ready(function(){
+      app.renderMainContent(1);
+    })
   </script>
 </body>
 </html>
