@@ -1,0 +1,17 @@
+[
+  {
+    "attandance": 1,
+    "grade": 80,
+    "note": "HTML"
+  },
+  {
+    "attandance": 0,
+    "group_id": 70,
+    "note": "CSS"
+  },
+  {
+    "attandance": 1,
+    "grade": 60,
+    "note": "JavaScript"
+  }
+]

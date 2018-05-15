@@ -50,7 +50,7 @@
                 <!-- <li style="width: auto;" id="newGroup"><a href="#" class="btn waves-effect green lighten-1" onclick="addNewGroup()">Добавить</a></li> -->
             </ul>
         </div>
-        <div class="col l9">
+        <div class="col l19">
             <div id="content"></div>
         </div>
     </div>
@@ -89,15 +89,15 @@
               All static URL's for getting data by API
   ////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-  // var urlGroupName = 'https://ejj.herokuapp.com/get_groups';
-  // var urlSubjectName = 'https://ejj.herokuapp.com/get_disciplines/';
-  // var urlSubGroup = "https://ejj.herokuapp.com/get_group/id=";
-  // var urlGetSubjectType = "https://ejj.herokuapp.com/get_type/"
+  var urlGroupName = 'https://ejj.herokuapp.com/get_groups';
+  var urlSubjectName = 'https://ejj.herokuapp.com/get_disciplines/';
+  var urlSubGroup = "https://ejj.herokuapp.com/get_group/id=";
+  var urlGetSubjectType = "https://ejj.herokuapp.com/get_type/"
 
-  var urlGroupName = 'http://192.168.43.155:5000/get_groups';
-  var urlSubjectName = 'http://192.168.43.155:5000/get_disciplines/';
-  var urlSubGroup = "http://192.168.43.155:5000/get_group/id=";
-  var urlGetSubjectType = "http://192.168.43.155:5000/get_type/"
+  // var urlGroupName = 'http://192.168.43.155:5000/get_groups';
+  // var urlSubjectName = 'http://192.168.43.155:5000/get_disciplines/';
+  // var urlSubGroup = "http://192.168.43.155:5000/get_group/id=";
+  // var urlGetSubjectType = "http://192.168.43.155:5000/get_type/"
   /*///////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     getGroup - This function is nessesary to get data about Groups
   ////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -256,7 +256,6 @@
         }
         }
         response.then(getType.bind(response, id_name));
-
       }
 
     /*//////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

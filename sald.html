@@ -6,111 +6,190 @@
   <title>Vue Tab</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="css/materialize.css">
+  <link rel="stylesheet" href="css/webix.css">
+  <link rel="stylesheet" href="css/material-webix.css">
+  <link rel="stylesheet" href="css/main.css">
   <style media="screen">
-    li.indicator{
+    .tabs .indicator{
       background-color: #3f51b5;
     }
   </style>
 </head>
 <body>
+  <div class="navbar-fixed">
+      <nav class="nav-extended blue">
+          <div class="nav-wrapper">
+            <a href="/" class="brand-logo" style="font-size: 16px;">Электронный Журнал</a>
+              <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+              <ul id="nav-mobile" class="right hide-on-med-and-down">
+                  <!-- Dropdown Structure -->
+                  <ul id="user-settings" class="dropdown-content">
+                      <li><a href="#!">настройки</a></li>
+                  </ul>
 
-<div id="app">
+                  <li><a class="dropdown-trigger" href="#!" data-beloworigin="true" data-activates="user-settings">Пользователь<i class="material-icons right">arrow_drop_down</i></a></li>
+                  <li><a href="#">Выйти</a></li>
+              </ul>
+          </div>
+      </nav>
+  </div>
   <div class="row">
-    <div class="col l3">
+    <div class="col l2">
       <ul id="slide-out" class="side-nav fixed"></ul>
     </div>
-    <div class="col l9">
+    <div class="col l10" style="padding-left:30px;">
       <div id="content" class="center"></div>
-      <div id="sub-tabs-content"></div>
     </div>
   </div>
- <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
-</div>
+
 
   <script src="js/jquery-3.3.1.js" charset="utf-8"></script>
-  <script src="js/jquery-ui.js" charset="utf-8"></script>
   <script src="js/materialize.js" charset="utf-8"></script>
-  <script src="js/semantic.js" charset="utf-8"></script>
-  <script src="js/moment.js"></script>
-  <script src="js/tabulator.js" charset="utf-8"></script>
-  <script src="js/main.js" charset="utf-8"></script>
+  <script src="js/webix.js" charset="utf-8"></script>
   <script src="js/vue.js"></script>
   <script src="js/axios.js"></script>
+  <script src="js/main.js" charset="utf-8"></script>
   <script>
+  $(".dropdown-trigger").dropdown();
   var urlGroupName = 'https://ejj.herokuapp.com/get_groups';
   var urlSubjectName = 'https://ejj.herokuapp.com/get_disciplines/';
   var urlSubGroup = "https://ejj.herokuapp.com/get_group/id=";
   var urlGetSubjectType = "https://ejj.herokuapp.com/get_type/"
-
+  var urlGetDate = "https://ejj.herokuapp.com/get_date/id="
   // var urlGroupName = 'http://10.42.0.206:5000/get_groups';
   // var urlSubjectName = 'http://10.42.0.206:5000/get_disciplines/';
   // var urlSubGroup = "http://10.42.0.206:5000/get_group/id=";
-  // var urlGetSubjectType = "http://10.42.0.206:5000/get_type/"
+  // var urlGetSubjectType = "http://10.42.0.206:5000/get_type/";
+  // var urlGetDate = "http://10.42.0.206:5000/get_date/id=";
 
   var i, j, k;
-    let app = new Vue({
-      el: '#app',
-      methods: {
-        renderMainContent: function(check){
+        function renderMainContent(check){
 
           axios.get(urlGroupName).then(response => {
             groups = response.data;
-            var groupUl = $('<ul>', {"class": "tabs"}).appendTo("#slide-out");
+            var groupUl = $('<ul>', {"class": "tabs section table-of-contents"}).appendTo("#slide-out");
+              var subheader = $('<li>', {"class": "waves-effect"}).appendTo(groupUl);
+              var a = $('<a>', {"class": "subheader"}).html("Список групп").appendTo(subheader);
             for(i = 0; i < groups.length; i++){
                 var groupLi = $('<li>', {"class": "tab"}).appendTo(groupUl);
                 var groupLink = $('<a>', {
-                  "href": "#" + groups[i].id,
-                  "class": "indigo-text tab-item",
-                  // "v-on:click": "getSubject(" + groups[i].id + "," + i + ")"
-                  // "v-on:click": "alert('dfsfdsf')"
+                  "href": "#" + "group" + groups[i].id,
+                  "class": "waves-effect",
+                  "onclick": "getSubject(" + groups[i].id + "," + i + ")"
                 }).html(groups[i].name).appendTo(groupLi);
-                var div = $('<div>', {"id": groups[i].id}).appendTo('#content');
-                var cont = $('<div>', {"id": "group" + groups[i].id}).appendTo('#sub-tabs-content');
+                var div = $('<div>', {"id": "group" + groups[i].id, "class": "section scrollspy"}).appendTo('#content');
 
                 if(i==1 && check){break;}
-                this.getSubject(groups[i].id, i);
-                $('#slide-out .tab-item').click(function(){
-                  this.getSubject(groups[i].id, i)
-                });
+                getSubject(groups[i].id, i);
             }
             $('.tabs').tabs();
           })
-        },
-        getSubject: function(group_id, i){
+        }
+        function getSubject(group_id, i){
+          $("#content div[id=" + "group" + group_id + "]").empty();
+
           axios.get(urlSubjectName + groups[i].id).then(response => {
+
             subjects = response.data.list_of_discipline;
-            var subjectUl = $('<ul>', {"class": "tabs"}).appendTo("div[id=" + group_id + "]");
+            var subjectUl = $('<ul>', {"class": "tabs"}).appendTo("#content div[id=group" + group_id + "]");
             for(j = 0; j < subjects.length; j++){
               if(group_id == subjects[j].group_id){
                 var subjectLi = $('<li>', {"class": "tab"}).appendTo(subjectUl);
-                var subjectLink = $('<a>', {"href": "#" + subjects[j].name_id, "class": "indigo-text"}).html(subjects[j].name).appendTo(subjectLi);
-
-                var div = $('<div>', {"id": subjects[j].name_id}).appendTo('div[id=group' + group_id);
-                axios.get(urlGetSubjectType + groups[i].id + "&dis=" + subjects[j].id + "&sub=" + subjects[j].sub_id).then(this.getType.bind(response, subjects[j].name_id, j));
+                var subjectLink = $('<a>', {
+                  "href": "#group" + group_id + subjects[j].name_id,
+                  "class": "indigo-text",
+                  "onclick": "getType(" + "'" + subjects[j].name_id +"'" + "," + subjects[j].sub_id + "," + subjects[j].id + "," + group_id + ")"
+                }).html(subjects[j].name).appendTo(subjectLi);
+                // console.log(subjects[j].name_id);
+                var div = $('<div>', {"id": "group" + group_id + subjects[j].name_id}).appendTo('div[id=group' + group_id + "]");
+                getType(subjects[j].name_id, subjects[j].sub_id, subjects[j].id, group_id);
               }
             }
-            $('a[href=' + subjects[0].name_id + "]").addClass("active");
-            console.log(subjects[0].name_id);
+            // console.log(subjects[0].name_id);
           $('.tabs').tabs();
           });
-
-        },
-        getType: function(subject_id, j, response){
-          types = response.data.type_of_discipline;
-          var typeUl = $('<ul>', {"class": "tabs"}).appendTo("div[id=" + subject_id + "]");
-          for(k = 0; k < types.length; k++){
-            var TypeLi = $('<li>', {"class": "tab"}).appendTo(typeUl);
-            var TypeLink = $('<a>', {"href": "#" + types[k].tn_eng + types[k].dis_type}).html(types[k].dis_tn).appendTo(TypeLi);
-            // if(k == 0){
-            //   TypeLink.addClass("active");
-            // }
-
-          }
         }
-      }
-    });
+
+        function getType(subject_name_id,sub_id, dis_id, group_id){
+
+          $("#content div[id=group" + group_id + subject_name_id + "]").empty();
+
+          axios.get(urlGetSubjectType + group_id + "&dis=" + dis_id + "&sub=" + sub_id).then(response => {
+            types = response.data.type_of_discipline;
+            var typeUl = $('<ul>', {"class": "tabs"}).appendTo("#content div[id=group" + group_id + subject_name_id + "]");
+            for(k = 0; k < types.length; k++){
+              var TypeLi = $('<li>', {"class": "tab"}).appendTo(typeUl);
+              var TypeLink = $('<a>', {
+                "href": "#" + subject_name_id + types[k].tn_eng,
+                "class": "indigo-text",
+                "onclick": "renderTable(" + "\"" + subject_name_id + "\"" + "," + "\"" + types[k].tn_eng + "\"" + "," + group_id + "," + sub_id + "," + dis_id + ',' + types[k].dis_type + ")"
+              }).html(types[k].dis_tn).appendTo(TypeLi);
+              var cont = $('<div>', {"id": subject_name_id + types[k].tn_eng, "style": "padding: 15px 0;"}).appendTo("#content div[id=group" + group_id + subject_name_id + "]");
+
+              renderTable(subject_name_id, types[k].tn_eng, group_id, sub_id, dis_id, types[k].dis_type);
+
+            }
+            $('.tabs').tabs();
+          })
+        }
+
+        function renderTable(subject_name_id, type_name_id, group_id, sub_id, dis_id, type_id) {
+
+            axios.get(urlSubGroup + group_id + "&sub=" + sub_id + "&dis=" + dis_id).then(response => {
+              this.grid = webix.ui({
+              container: subject_name_id + type_name_id,
+              view:"datatable",
+              url: "date.json",
+              editable:true,
+              responsive:true,
+              select:"row",
+              data: response.data,
+              leftSplit: 1,
+              autoheight: true,
+              resizeColumn:true,
+              resizeRow: true,
+              scrollX: true,
+                 columns:[
+                  { id:"full_name", header:[{content:"textFilter"}, "Ф.И.О"], adjust: true},
+                 ],
+            });
+            var columns = webix.toArray(this.grid.config.columns);
+                axios.get(urlGetDate + group_id + "&dis=" + dis_id + "&sub=" + sub_id + "&type=" + type_id)
+                .then(response => {
+                  date = response.data;
+                  var columns = webix.toArray(this.grid.config.columns);
+                  var mas=["<i class=\'material-icons tb-icon\' title=\'Присутствие\'>event_available</i>","<i class=\'material-icons tb-icon\' title=\'Присутствие\'>grade</i>","<i class=\'material-icons tb-icon\' title=\'Присутствие\'>chat</i>"];
+                  kj=0;
+                  for(var i = 0; i <date.length ; i++){
+                    t=0;
+                    for(var j = 0; j < date[i].dates.length; j++){
+                      for(var k=0;k<3;k++){
+                        n = date[i].dates.length;
+                        kj++;
+                        if(k==0){
+                          t=3;
+                        }else{
+                          t=0;
+                        }
+                        columns.insertAt({
+                          id: "attandance"+ webix.uid(),
+                          header: [{text: date[i].month, colspan: n*3 , css:{"text-align": "center"}}, {text:date[i].dates[j], colspan: t}, {text:mas[k]}],
+                          editor: "text",
+                          view: "checkbox"
+                        },kj);
+                        n = 0;
+                      }
+                    }
+                  }
+                  this.grid.refreshColumns();
+                });
+            })
+        }
+
     $('document').ready(function(){
-      app.renderMainContent(1);
+      renderMainContent(1);
+      // grid.refreshColumns();
+      $('.tabs').tabs();
     })
   </script>
 </body>

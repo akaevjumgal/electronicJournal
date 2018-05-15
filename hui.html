@@ -4,101 +4,97 @@
     <meta charset="utf-8">
     <title>Журнал</title>
     <!-- <link rel="stylesheet" href="css/semantic.css"> -->
-    <link rel="stylesheet" href="css/materialize.css">
+    <link rel="stylesheet" href="css/webix.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
   <body>
 
-    <div id="app">
-      <div class="col l3">
-        <ul class="tabs">
-           <li class="tab" v-for="group in groups">
-              <a v-bind:href="'#' + group.id">{{ group.name }}</a>
-           </li>
-        </ul>
-      </div>
-      <div class="col l9">
-        <div v-bind:id="group.id" v-for="group in groups">
-          <ul class="tabs">
-             <li class="tab">
-             <template v-for="subject in subjects">
-                 <a href="#" :id="subject.name_id" v-if="group.id == subject.group_id">{{ subject.name }}</a>
-             </template>
-              </li>
-            </ul>
-              <!-- <div v-bind:id="subject.id">
-
-              </div> -->
-        </div>
 
 
-
-      </div>
-      <!-- <div v-for="group in groups">
-        <p v-for="subject in subjects">
-          {{ subject.name }}
-        </p>
-        <p v-for="type in types">
-          {{ type.dis_tn }}
-        </p>
-      </div> -->
-
-    </div>
+    <div id="box" style="width: 100%;"></div>
 
 
 
   <script src="js/jquery-3.3.1.js"></script>
-  <script src="js/materialize.js" charset="utf-8"></script>
-  <!-- <script src="js/semantic.js"></script> -->
-  <script src="js/vue.js"></script>
-  <script src="js/axios.js"></script>
+  <script src="js/webix.js" charset="utf-8"></script>
+  <script src="js/axios.js" charset="utf-8"></script>
 
   <script>
-  var arr = [];
-  let i, j, k;
-  let groupsURL = 'https://ejj.herokuapp.com/get_groups',
-      subjectsURL = 'https://ejj.herokuapp.com/get_disciplines/',
-        typeURL = 'https://ejj.herokuapp.com/get_type/';
-  // let groupsURL = 'http://10.42.0.206:5000/get_groups',
-  //     subjectsURL = 'http://10.42.0.206:5000/get_disciplines/',
-  //       typeURL = 'http://10.42.0.206:5000/get_type/';
-    var app = new Vue({
-      el: '#app',
-      data: {
-        groups: [],
-        subjects: [],
-        types: [],
-      },
-      methods: {
-        dis_query: function(){
-          axios.get(groupsURL)
-            .then(response => {
-              this.groups = response.data;
-              for(i = 0; i < this.groups.length; i++){
-                axios.get(subjectsURL + this.groups[i].id)
-                .then(this.getSubject.bind(response, this.groups[i].id));
-             }
-            });
-          },
-        getSubject: function(group_id,response){
+  var grid_data = [
+  {
+    "email": "nabakirov@gmail.com",
+    "full_name": "Абакиров Нурсултан",
+    "group_id": 1,
+    "id": 1,
+    "grade": "80",
+    "status_id": 1
+  },
+  {
+    "email": "akaev@gmail.com",
+    "full_name": "Nurlan\n",
+    "group_id": 1,
+    "id": 2,
+    "grade": "60",
+    "status_id": 1
+  },
+  {
+    "email": "Orgen@mail.ru",
+    "full_name": "Максатбеков",
+    "group_id": 1,
+    "id": 4,
+    "grade": "70",
+    "status_id": 1
+  }
+]
 
-           dis_tn = response.data.list_of_discipline;
-           for(j = 0; j < dis_tn.length; j++){
-             arr.push(dis_tn[j]);
-             axios.get(typeURL + group_id + "&dis=" + dis_tn[j].id + "&sub=" + dis_tn[j].sub_id)
-               .then(response => {
-                 this.types = response.data.type_of_discipline;
-               })
+this.grid = new webix.ui({
+  container: "box",
+  view:"datatable",
+  data: grid_data,
+  leftSplit: 1,
+  autoheight: true,
+  resizeColumn:true,
+  resizeRow: true,
+  scrollX: true,
+     columns:[
+      { id:"full_name", header:"Ф.И.О", adjust: true},
+     ],
 
-           }
-           // console.log(arr[0].name);
-           this.subjects = arr;
+});
 
+
+  axios.get("https://ejj.herokuapp.com/get_date/id=1&dis=1&sub=1&type=1")
+  .then(response => {
+    date = response.data;
+    var columns = webix.toArray(this.grid.config.columns);
+    var mas=["Пр","Оц","Комм"];
+    kj=0;
+    for(var i = 0; i <date.length ; i++){
+      t=0;
+      for(var j = 0; j < date[i].dates.length; j++){
+        for(var k=0;k<3;k++){
+          n = date[i].dates.length;
+          kj++;
+          if(k==0){
+            t=3;
+          }else{
+            t=0;
+          }
+          columns.insertAt({
+            id: "",
+            header: [{text: date[i].month, colspan: n*3 , css:{"text-align": "center"}}, {text:date[i].dates[j], colspan: t}, {text:mas[k]}],
+          },kj);
+          n = 0;
         }
-     }
-    });
-    app.dis_query();
-    // app.dis();
-// $("li .tab:first-child").attr("class", "active");
+      }
+    }
+    this.grid.refreshColumns();
+  })
+
+
+
+// url:"http://10.42.0.1:5000/get_date/id=1&dis=1&sub=1&type=1"
+
   </script>
   </body>
 </html>
